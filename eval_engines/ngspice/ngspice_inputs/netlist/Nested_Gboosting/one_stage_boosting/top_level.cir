@@ -1,0 +1,177 @@
+** Generated for: hspiceD
+** Generated on: Jan 23 13:01:18 2019
+** Design library name: gain_boost_templates
+** Design cell name: ac_tb
+** Design view name: schematic
+
+.include "/tools/projects/ISG/isg_chips/projects/kourosh_DeepCkt/bag_workspace_GF14LPP/bag_deep_ckt/eval_engines/NGspice/ngspice_inputs/spice_models/45nm_bulk.txt"
+
+*global bias
+.PARAM mn_glob=2 mp_glob=4
+*local bias pmos
+.PARAM m_localp_n=2 m_localp_p=4
+*local bias nmoas
+.PARAM m_localn_n=2 m_localn_p=4
+*core_n unit cell
+.PARAM core_n_in=10 core_n_tail=10 core_n_csp=60
+*core_p unit cell
+.PARAM core_p_in=20 core_p_tail=20 core_p_csn=60
+*amp main
+.PARAM main_scale=1 main_in='main_scale*core_n_in' main_tail='main_scale*core_n_tail' main_csp='main_scale*core_n_csp'
+*amp gb top
+.PARAM gb_t_scale=1 gb_t_in='gb_t_scale*core_n_in' gb_t_tail='gb_t_scale*core_n_tail' gb_t_csp='gb_t_scale*core_n_csp'
+*amp gb bot
+.PARAM gb_b_scale=1 gb_b_in='gb_b_scale*core_p_in' gb_b_tail='gb_b_scale*core_p_tail' gb_b_csn='gb_b_scale*core_p_csn'
+
+** Library name: gain_boost_templates
+** Cell name: core_n
+** View name: schematic
+.subckt core_n vdd vss cs_n cs_p gb_bot_inn gb_bot_inp gb_bot_outn gb_bot_outp gb_top_inn gb_top_inp gb_top_outn gb_top_outp in_minus in_plus o_minus o_plus tail_b tail_t m_in=2 mtail=2 mcsp=2
+mcs_n_l gb_bot_inn cs_n vss vss nmos w=0.5u l=90n m='mtail/2'
+mcs_n_r gb_bot_inp cs_n vss vss nmos w=0.5u l=90n m='mtail/2'
+mcas_n_l o_minus gb_bot_outp gb_bot_inn vss nmos w=0.5u l=90n m='mtail/2'
+mcas_n_r o_plus gb_bot_outn gb_bot_inp vss nmos w=0.5u l=90n m='mtail/2'
+mtail_bot net7 tail_b vss vss nmos w=0.5u l=90n m='mtail'
+*mtail_top v2 tail_t net7 vss nmos w=0.5u l=90n m='mtail'
+*vsense2 v2 vdd 0
+mtail_top net1 tail_t net7 vss nmos w=0.5u l=90n m='mtail'
+min_plus gb_top_inn in_plus net1 vss nmos w=0.5u l=90n m='m_in'
+min_minus gb_top_inp in_minus net1 vss nmos w=0.5u l=90n m='m_in'
+mcas_p_l o_minus gb_top_outp gb_top_inn vdd pmos w=0.5u l=90n m='mcsp/2'
+mcas_p_r o_plus gb_top_outn gb_top_inp vdd pmos w=0.5u l=90n m='mcsp/2'
+mcs_p_l gb_top_inn cs_p vdd vdd pmos w=0.5u l=90n m='mcsp'
+mcs_p_r gb_top_inp cs_p vdd vdd pmos w=0.5u l=90n m='mcsp'
+.ends core_n
+** End of subcircuit definition.
+
+** Library name: gain_boost_templates
+** Cell name: core_p
+** View name: schematic
+.subckt core_p vdd vss cs_n cs_p gb_bot_inn gb_bot_inp gb_bot_outn gb_bot_outp gb_top_inn gb_top_inp gb_top_outn gb_top_outp in_minus in_plus o_minus o_plus tail_b tail_t m_in=2 mtail=2 mcsn=2
+mcas_n_l o_minus gb_bot_outp gb_bot_inn vss nmos w=0.5u l=90n m='mcsn/2'
+mcas_n_r o_plus gb_bot_outn gb_bot_inp vss nmos w=0.5u l=90n m='mcsn/2'
+mcs_n_l gb_bot_inn cs_n vss vss nmos w=0.5u l=90n m='mcsn'
+mcs_n_r gb_bot_inp cs_n vss vss nmos w=0.5u l=90n m='mcsn'
+mcs_p_l gb_top_inn cs_p vdd vdd pmos w=0.5u l=90n m='mtail/2'
+mcs_p_r gb_top_inp cs_p vdd vdd pmos w=0.5u l=90n m='mtail/2'
+mcas_p_l o_minus gb_top_outp gb_top_inn vdd pmos w=0.5u l=90n m='mtail/2'
+mcas_p_r o_plus gb_top_outn gb_top_inp vdd pmos w=0.5u l=90n m='mtail/2'
+min_plus gb_bot_inn in_plus net7 vdd pmos w=0.5u l=90n m='m_in'
+min_minus gb_bot_inp in_minus net7 vdd pmos w=0.5u l=90n m='m_in'
+mtail_top net16 tail_t vdd vdd pmos w=0.5u l=90n m='mtail'
+*mtail_bot v1 tail_b net16 vdd pmos w=0.5u l=90n m='mtail'
+*vsense1 v1 vss 0
+mtail_bot net7 tail_b net16 vdd pmos w=0.5u l=90n m='mtail'
+.ends core_p
+** End of subcircuit definition.
+
+
+** Library name: gain_boost_templates
+** Cell name: bias_global
+** View name: schematic
+.subckt bias_global vdd vss nb nt pb pt
+m1 nt nt nb vss nmos w=0.5u l=90n m=mn_glob
+m2 pb nt net14 vss nmos w=0.5u l=90n m=mn_glob
+m3 nb nb vss vss nmos w=0.5u l=90n m=mn_glob
+m4 net14 nb vss vss nmos w=0.5u l=90n m=mn_glob
+m6 pt pt vdd vdd pmos w=0.5u l=90n m=mp_glob
+m5 pb pb pt vdd pmos w=0.5u l=90n m=mp_glob
+.ends bias_global
+** End of subcircuit definition.
+
+** Library name: gain_boost_templates
+** Cell name: bias_local_nmos
+** View name: schematic
+.subckt bias_local_nmos vdd vss nb nt pb pt
+m1 net14 nt vss vss nmos w=0.5u l=90n m='m_localn_n/2'
+m2 net13 nb vss vss nmos w=0.5u l=90n m=m_localn_n
+m3 nt nt net14 vss nmos w=0.5u l=90n m='m_localn_n/2'
+m4 nb nt net13 vss nmos w=0.5u l=90n m=m_localn_n
+m5 nt pb net16 vdd pmos w=0.5u l=90n m=m_localn_p
+m6 nb pb net15 vdd pmos w=0.5u l=90n m=m_localn_p
+m7 net16 pt vdd vdd pmos w=0.5u l=90n m=m_localn_p
+m8 net15 pt vdd vdd pmos w=0.5u l=90n m=m_localn_p
+.ends bias_local_nmos
+** End of subcircuit definition.
+
+** Library name: gain_boost_templates
+** Cell name: bias_local_pmos
+** View name: schematic
+.subckt bias_local_pmos vdd vss nb nt pb pt
+m1 net15 nb vss vss nmos w=0.5u l=90n m=m_localp_n
+m2 net16 nb vss vss nmos w=0.5u l=90n m=m_localp_n
+m3 pb nt net15 vss nmos w=0.5u l=90n m=m_localp_n
+m4 pt nt net16 vss nmos w=0.5u l=90n m=m_localp_n
+m5 pb pb net14 vdd pmos w=0.5u l=90n m='m_localp_p/2'
+m6 pt pb net13 vdd pmos w=0.5u l=90n m=m_localp_p
+m7 net14 pb vdd vdd pmos w=0.5u l=90n m='m_localp_p/2'
+m8 net13 pt vdd vdd pmos w=0.5u l=90n m=m_localp_p
+.ends bias_local_pmos
+** End of subcircuit definition.
+
+** Library name: gain_boost_templates
+** Cell name: folded_cascode_one_stage_gb
+** View name: schematic
+
+.subckt folded_cascode_one_stage_gb vdd vss i_ref in_minus in_plus o_minus o_plus vcm
+xgb1_top vdd vss cs_n_b gb_top_cmfb net3 net4 cs_n_t cs_n_t net5 net6 cs_p_b cs_p_b gb_top_inn gb_top_inp gb_top_outn gb_top_outp cs_n_b cs_n_t core_n m_in=main_in mtail=main_tail mcsp=main_csp
+xcore_n vdd vss cs_n_b cmfb_minus gb_bot_inn gb_bot_inp gb_bot_outn gb_bot_outp gb_top_inn gb_top_inp gb_top_outn gb_top_outp in_minus in_plus o_minus o_plus cs_n_b cs_n_t core_n  m_in=gb_t_in mtail=gb_t_tail mcsp=gb_t_csp
+xi0 vdd vss nb i_ref pb pt bias_global
+xnmos_bias vdd vss cs_n_b cs_n_t pb pt bias_local_nmos
+xpmos_bias vdd vss nb i_ref cs_p_b cs_p_t bias_local_pmos
+e1 gb_bot_cmfb vss gb_bot_cm_out vcm 30
+e0 gb_top_cmfb vss gb_top_cm_out vcm 30
+evcmfb cmfb_minus vss cm_out vcm 30
+r5 gb_bot_outp gb_bot_cm_out 1e12
+r4 gb_bot_outn gb_bot_cm_out 1e12
+c2 gb_bot_cm_out vss 1
+r3 gb_top_outn gb_top_cm_out 1e12
+r2 gb_top_outp gb_top_cm_out 1e12
+c1 gb_top_cm_out vss 1
+r1 o_minus cm_out 1e12
+r0 o_plus cm_out 1e12
+c0 cm_out vss 1
+xgb1_b vdd vss gb_bot_cmfb cs_p_t net06 net08 cs_n_t cs_n_t net05 net07 cs_p_b cs_p_b gb_bot_inn gb_bot_inp gb_bot_outn gb_bot_outp cs_p_b cs_p_t core_p m_in=gb_b_in mtail=gb_b_tail mcsn=gb_b_csn
+.ends folded_cascode_one_stage_gb
+** End of subcircuit definition.
+
+** Library name: gain_boost_templates
+** Cell name: ac_tb
+** View name: schematic
+xdut vdd 0 i_ref in_minus in_plus o_minus o_plus vcm folded_cascode_one_stage_gb
+CL o_plus o_minus cload
+
+* testbench specification
+vdd vdd 0 1.2
+ibias VDD i_ref ibias
+
+vin in 0 dc=0 ac=1.0
+ein1 in_plus incm in 0 0.5
+ein2 in_minus incm in 0 -0.5
+vicm incm 0 dc=vicm
+vcm_ref vcm 0 dc=vocm
+
+* parameters
+.param ibias=20u
+.param vicm=0.9
+.param vocm=0.6
+.param cload=400f
+
+*.ac dec 10 1 100G
+.op
+*.control
+*op
+*print i_ref xdut.pt xdut.pb xdut.nb
+*print xdut.gb_bot_cm_out
+*print xdut.gb_bot_inn xdut.gb_bot_inp
+*print xdut.xgb1_b.net7
+*run
+*set units=degrees
+*set wr_vecnames
+*option numdgt=7
+*wrdata ac.csv v(o_plus)-v(o_minus)
+*wrdata dc.csv v(o_plus) v(o_minus) i(vdd)
+*.endc
+
+
+.END

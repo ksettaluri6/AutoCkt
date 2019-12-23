@@ -1,0 +1,188 @@
+* OTA with 0 level of gain boosting
+
+.include "/tools/projects/ISG/isg_chips/projects/kourosh_DeepCkt/bag_workspace_GF14LPP/bag_deep_ckt/eval_engines/NGspice/ngspice_inputs/spice_models/45nm_bulk.txt"
+
+*******************************
+* core_nmos input subcircuit  *
+*******************************
+* nodes:
+* VDD, GND: Supplies 
+* in_plus, in_minus: input voltages
+* o_plus, o_minus: output voltages
+* tail_b, tail_t: tail consists of two cascoded devices, these are the voltage nodes
+* cs_n, cs_p: current sources of the cascode stage, these are voltage nodes
+* cas_n_l, cas_n_r, cas_p_l, cas_p_r: cascode bias voltages, n/p (nmos/pmos), l/r(left/right)
+
+.SUBCKT core_n VDD GND in_plus in_minus o_plus o_minus tail_b tail_t cs_n cs_p cas_n_l cas_n_r cas_p_l cas_p_r m_in=2 m_tail=2 m_cas=2 m_csp=2 ibias=100u
+
+min_plus 4 in_plus 2 GND nmos w=0.5u l=90n m=m_in
+min_minus 3 in_minus 2 GND nmos w=0.5u l=90n m=m_in
+
+mtail_t 2 tail_t 1 GND nmos w=0.5u l=90n m=m_tail
+mtail_b 1 tail_b GND GND nmos w=0.5u l=90n m=m_tail
+
+mcs_n_L 5 cs_n GND GND nmos w=0.5u l=90n m={m_tail/2}
+mcs_n_R 6 cs_n GND GND nmos w=0.5u l=90n m={m_tail/2}
+
+mcas_n_L o_minus cas_n_L 5 GND nmos w=0.5u l=90n m={m_tail/2}
+mcas_n_R o_plus cas_n_R 6 GND nmos w=0.5u l=90n m={m_tail/2}
+
+mcas_p_L o_minus cas_p_L 4 VDD pmos w=0.5u l=90n m=m_cas
+mcas_p_R o_plus cas_p_R 3 VDD pmos w=0.5u l=90n m=m_cas
+
+mcs_p_L 4 cs_p VDD VDD pmos w=0.5u l=90n m=m_csp
+mcs_p_R 3 cs_p VDD VDD pmos w=0.5u l=90n m=m_csp
+
+.ENDS core_n
+
+**************************************
+*  global bias reference subcircuit  *
+**************************************
+* nodes:
+* VDD, GND: Supplies 
+* i_ref: input current reference
+* pt, pb: pmos output voltages t/b (top/bottom)
+* nt, nb: nmos output voltages t/b (top/bottom)
+
+.SUBCKT bias_glob VDD GND pt pb nt nb mn=2 mp=2
+
+m1 nt nt nb GND nmos w=0.5u l=90n m=mn
+m2 pb nt 1 GND nmos w=0.5u l=90n m=mn
+
+m3 nb nb GND GND nmos w=0.5u l=90n m=mn
+m4 1 nb GND GND nmos w=0.5u l=90n m=mn
+
+m5 pb pb pt VDD pmos w=0.5u l=90n m=mp
+m6 pt pt VDD VDD pmos w=0.5u l=90n m=mp
+
+.ENDS bias_glob
+
+********************************
+*  local nmos bias subcircuit  *
+********************************
+* nodes:
+* VDD, GND: Supplies 
+* pt, pb: pmos input voltages t/b (top/bottom)
+* nt, nb: nmos output voltages t/b (top/bottom)
+
+.SUBCKT bias_local_n VDD GND pt pb nt nb mn=2 mp=2
+
+m1 3 nt GND GND nmos w=0.5u l=90n m=mn
+m2 4 nb GND GND nmos w=0.5u l=90n m=mn
+
+m3 nt nt 3 GND nmos w=0.5u l=90n m=mn
+m4 nb nt 4 GND nmos w=0.5u l=90n m=mn
+
+m5 nt pb 1 VDD pmos w=0.5u l=90n m=mp
+m6 nb pb 2 VDD pmos w=0.5u l=90n m=mp
+
+m7 1 pt VDD VDD pmos w=0.5u l=90n m=mp
+m8 2 pt VDD VDD pmos w=0.5u l=90n m=mp
+
+.ENDS bias_local_n
+
+
+********************************
+*  local pmos bias subcircuit  *
+********************************
+* nodes:
+* VDD, GND: Supplies 
+* pt, pb: pmos output voltages t/b (top/bottom)
+* nt, nb: nmos input voltages t/b (top/bottom)
+
+.SUBCKT bias_local_p VDD GND pt pb nt nb mn=2 mp=2
+
+m1 1 nb GND GND nmos w=0.5u l=90n m=mn
+m2 2 nb GND GND nmos w=0.5u l=90n m=mn
+
+m3 pb nt 1 GND nmos w=0.5u l=90n m=mn
+m4 pt nt 2 GND nmos w=0.5u l=90n m=mn
+
+m5 pb pb 3 VDD pmos w=0.5u l=90n m=mp
+m6 pt pb 4 VDD pmos w=0.5u l=90n m=mp
+
+m7 3 pb VDD VDD pmos w=0.5u l=90n m=mp
+m8 4 pt VDD VDD pmos w=0.5u l=90n m=mp
+
+.ENDS bias_local_p
+
+
+****************************
+* CMFB for pmos subcircuit *
+****************************
+* nodes:
+* VDD, GND: Supplies 
+* cm: reference voltage node
+* vo_plus, vo_minus: sensing nodes
+* fb_minus, fb_plus: response nodes, pmos should be connected to fb_minus and fb_plus should be left floating
+* tail_t, tail_b: curent source bias voltages t/b(top/bottom)
+
+.SUBCKT cmfb_p VDD GND cm vo_plus vo_minus fb_minus fb_plus tail_t tail_b  m_tail=2 m_amp=2 m_load=2
+
+m1 1 tail_b GND GND nmos w=0.5u l=90n m=m_tail
+m2 2 tail_b GND GND nmos w=0.5u l=90n m=m_tail
+
+m3 3 tail_t 1 GND nmos w=0.5u l=90n m=m_tail
+m4 4 tail_t 2 GND nmos w=0.5u l=90n m=m_tail
+
+m5 fb_plus vo_plus 3 GND nmos w=0.5u l=90n m=m_amp
+m6 fb_minus cm 3 GND nmos w=0.5u l=90n m=m_amp
+
+m7 fb_minus cm 4 GND nmos w=0.5u l=90n m=m_amp
+m8 fb_plus vo_minus 4 GND nmos w=0.5u l=90n m=m_amp
+
+m9 fb_minus fb_minus VDD VDD pmos w=0.5u l=90n m=m_load
+m10 fb_plus fb_plus VDD VDD pmos w=0.5u l=90n m=m_load
+
+.ENDS cmfb_p
+
+****************************
+* CMFB for nmos subcircuit *
+****************************
+* nodes:
+* VDD, GND: Supplies 
+* cm: reference voltage node
+* vo_plus, vo_minus: sensing nodes
+* fb_minus, fb_plus: response nodes, pmos should be connected to fb_minus and fb_plus should be left floating
+* tail_t, tail_b: curent source bias voltages t/b(top/bottom)
+
+.SUBCKT cmfb_n VDD GND cm vo_plus vo_minus fb_minus fb_plus tail_t tail_b  m_tail=2 m_amp=2 m_load=2
+
+m1 1 tail_t VDD VDD pmos w=0.5u l=90n m=m_tail
+m2 2 tail_t VDD VDD pmos w=0.5u l=90n m=m_tail
+
+m3 3 tail_b 1 VDD pmos w=0.5u l=90n m=m_tail
+m4 4 tail_b 2 VDD pmos w=0.5u l=90n m=m_tail
+
+m5 fb_plus vo_plus 3 VDD pmos w=0.5u l=90n m=m_amp
+m6 fb_minus cm 3 VDD pmos w=0.5u l=90n m=m_amp
+
+m7 fb_minus cm 4 VDD pmos w=0.5u l=90n m=m_amp
+m8 fb_plus vo_minus 4 VDD pmos w=0.5u l=90n m=m_amp
+
+m9 fb_plus fb_plus GND GND pmos w=0.5u l=90n m=m_load
+m10 fb_minus fb_minus GND GND pmos w=0.5u l=90n m=m_load
+
+.ENDS cmfb_n 
+
+
+*********************
+* OTA subcircuit  *
+*********************
+
+.SUBCKT OTA VDD GND inp inn outp outn vcm i_ref m_in=2 m_tail=2 m_cas=2 m_csp=2 m_bias_ref_n=2 m_bias_ref_p=2 m_biasn_local_n=2 m_biasn_local_p=2 m_biasp_local_n=2 m_biasp_local_p=2 m_cmfb_tail=2 m_cmfb_amp=2 m_cmfb_load=2 ibias=100u
+
+vsc i_ref nt 0
+*vcasp cas_p 0 0.6
+
+Xcore_n VDD GND inp inn outp outn tail_b tail_t tail_b fb_minus tail_t tail_t cas_p cas_p core_n m_in=m_in m_tail=m_tail m_cas=m_cas m_csp=m_csp
+Xbias_global VDD GND pt pb nt nb bias_glob mn=m_bias_ref_n mp=m_bias_ref_p
+Xbias_p VDD GND float1 cas_p nt nb bias_local_p mn=m_biasp_local_n mp=m_biasp_local_p
+Xbias_n VDD GND pt pb tail_t tail_b bias_local_n mn=m_biasn_local_n mp=m_biasn_local_n
+Xcmfb_p VDD GND vcm outp outn fb_minus fb_plus tail_t tail_b cmfb_p m_tail=m_cmfb_tail m_amp=m_cmfb_tail m_load=m_cmfb_tail
+
+*rcmfb1 outp outcm 10000T
+*rcmfb2 outn outcm 10000T
+*ccmfb outcm 0 100000
+*ecmfb fb_minus 0 outcm vcm 100
+.ENDS

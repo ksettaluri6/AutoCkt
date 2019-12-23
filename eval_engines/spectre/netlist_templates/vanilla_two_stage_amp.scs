@@ -1,0 +1,77 @@
+// Generated for: spectre
+// Generated on: Dec  8 15:09:29 2019
+// Design library name: AAAFOO_TEST_OP_AMP
+// Design cell name: OPAMP_TWO_STAGE_lch_90n
+// Design view name: schematic
+simulator lang=spectre
+global 0
+include "/tools/tstech16/CLN16FFC/PDK_RF/models/crn16ffcll_1d8_sp_v1d0_2p1_usage.scs" section=TTMacro_MOS_MOSCAP
+include "/tools/tstech16/CLN16FFC/PDK_RF/models/crn16ffcll_1d8_sp_v1d0_2p1_usage.scs" section=TT_RES_BIP_DIO_DISRES
+include "/tools/tstech16/CLN16FFC/PDK_RF/models/crn16ffcll_1d8_sp_v1d0_2p1_usage.scs" section=TT_MOM
+include "/tools/tstech16/CLN16FFC/PDK_RF/models/crn16ffcll_1d8_sp_v1d0_2p1_usage.scs" section=TT_SCR
+include "/tools/tstech16/CLN16FFC/PDK_RF/models/crn16ffcll_1d8_sp_v1d0_2p1_usage.scs" section=TT_R_METAL
+
+parameters cc={{cc}} load={{load}} load2={{load2}} mir={{mir}} gm={{gm}} in={{in}} tail={{tail}} 
+
+// Library name: BAG_prim
+// Cell name: pmos4_standard
+// View name: schematic
+subckt pmos4_standard B D G S
+parameters l=60n w=500n nf=1
+    M0 (D G S B) pch_lvt_mac l=l nfin=w w=10n+48n*(w-1) multi=1 nf=nf \
+        sd=74.0n sa=90n sb=90n ploda1=16.0n ploda2=0 ploda3=0 plodb1=16.0n \
+        plodb2=0 plodb3=0 nf_flag=1 smbt=1M smbb=1M dinsaflag=0 ppitch=0 \
+        spot=103.00n spob=103.00n spotl1=103.00n spobl1=103.00n \
+        spotl2=103.00n spobl2=103.00n spotr1=103.00n spobr1=103.00n \
+        spotr2=103.00n spobr2=103.00n
+ends pmos4_standard
+// End of subcircuit definition.
+
+// Library name: BAG_prim
+// Cell name: nmos4_standard
+// View name: schematic
+subckt nmos4_standard B D G S
+parameters l=60n w=500n nf=1
+    M0 (D G S B) nch_lvt_mac l=l nfin=w w=10n+48n*(w-1) multi=1 nf=nf \
+        sd=74.0n sa=90n sb=90n ploda1=16.0n ploda2=0 ploda3=0 plodb1=16.0n \
+        plodb2=0 plodb3=0 nf_flag=1 smbt=1M smbb=1M dinsaflag=0 ppitch=0 \
+        spot=103.00n spob=103.00n spotl1=103.00n spobl1=103.00n \
+        spotl2=103.00n spobl2=103.00n spotr1=103.00n spobr1=103.00n \
+        spotr2=103.00n spobr2=103.00n
+ends nmos4_standard
+// End of subcircuit definition.
+
+// Library name: AAAFOO_TEST_OP_AMP
+// Cell name: OPAMP_TWO_STAGE_lch_90n
+// View name: schematic
+MLOAD2 (VDD net5 net5 VDD) pmos4_standard l=16n w=3 nf=load2
+XMGM (VDD vout net8 VDD) pmos4_standard l=16n w=2 nf=gm
+XMLOAD (VDD net8 net5 VDD) pmos4_standard l=16n w=2 nf=load2
+E0 (inn cm in gnd) vcvs gain=-0.5
+E1 (inp cm in gnd) vcvs gain=0.5
+XMINP (VSS net8 inp net6) nmos4_standard l=16n w=2 nf=in
+XMTAIL (0 net6 ibias 0) nmos4_standard l=16n w=2 nf=tail
+XMINN (VSS net5 inn net6) nmos4_standard l=16n w=2 nf=in
+XMLOAD3 (0 vout ibias 0) nmos4_standard l=16n w=2 nf=load
+XMIR (0 ibias ibias 0) nmos4_standard l=16n w=2 nf=mir
+V2 (VDD 0) vsource dc=1.0 type=dc
+V1 (cm 0) vsource dc=500.0m type=dc
+V0 (in 0) vsource mag=1 type=dc
+I1 (VDD ibias) isource dc=10u type=dc
+CLOAD (vout 0) capacitor c=10f
+CC (vout net8) capacitor c=cc
+simulatorOptions options reltol=1e-3 vabstol=1e-6 iabstol=1e-12 temp=27 \
+    tnom=27 scalem=1.0 scale=1.0 gmin=1e-12 rforce=1 maxnotes=5 maxwarns=5 \
+    digits=5 cols=80 pivrel=1e-3 sensfile="../psf/sens.output" \
+    checklimitdest=psf 
+ac ac start=1 stop=10G dec=10 annotate=status
+dcOp dc write="spectre.dc" maxiters=150 maxsteps=10000 annotate=status
+dcOpInfo info what=oppoint where=rawfile
+modelParameter info what=models where=rawfile
+element info what=inst where=rawfile
+outputParameter info what=output where=rawfile
+designParamVals info what=parameters where=rawfile
+primitives info what=primitives where=rawfile
+subckts info what=subckts where=rawfile
+save V2:p V2:p
+saveOptions options save=allpub

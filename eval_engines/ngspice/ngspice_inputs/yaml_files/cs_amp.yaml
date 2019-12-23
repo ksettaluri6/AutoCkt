@@ -1,0 +1,15 @@
+# Cs amp yaml file
+
+dsn_netlist: "./framework/netlist/cs_amp.cir"
+num_process: 1
+
+target_specs:
+  bw_min: !!float 1.0e9
+  gain_min: !!float 3.0
+  ibias_max: !!float 1.0e-3
+
+params:
+  vbias: !!python/tuple [0, !!float 1.8, !!float 50.0e-3]
+  rload: !!python/tuple [10.0, !!float 5.0e3, 20]
+  mul:   !!python/tuple [1, 100, 1]
+

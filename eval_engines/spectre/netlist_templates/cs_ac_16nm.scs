@@ -1,0 +1,47 @@
+// Generated for: spectre
+// Generated on: Apr 30 17:36:30 2019
+// Design library name: bag_analog_ec
+// Design cell name: cs_amp
+// Design view name: schematic
+simulator lang=spectre
+global 0
+parameters nf={{nf}} nfin={{nfin}} r={{res}} vb={{vb}} vdd={{vdd}}
+include "/tools/tstech16/CLN16FFC/PDK/tsmcN16/../models/toplevel.scs" section=top_tt
+
+// Library name: BAG_prim
+// Cell name: nmos4_standard
+// View name: schematic
+subckt nmos4_standard B D G S
+parameters l=60n w=500n nf=1
+    M0 (D G S B) nch_lvt_mac l=l nfin=w w=10n+48n*(w-1) multi=1 nf=nf \
+        sd=74.0n sa=90n sb=90n ploda1=16.0n ploda2=0 ploda3=0 plodb1=16.0n \
+        plodb2=0 plodb3=0 nf_flag=1 smbt=1M smbb=1M dinsaflag=0 ppitch=0 \
+        spot=103.00n spob=103.00n spotl1=103.00n spobl1=103.00n \
+        spotl2=103.00n spobl2=103.00n spotr1=103.00n spobr1=103.00n \
+        spotr2=103.00n spobr2=103.00n
+ends nmos4_standard
+// End of subcircuit definition.
+
+// Library name: bag_analog_ec
+// Cell name: cs_amp
+// View name: schematic
+X0 (VSS net1 in VSS) nmos4_standard l=90n w=nfin nf=nf
+V2 (in VSS) vsource dc=vb mag=1 type=dc
+V1 (VSS 0) vsource dc=0 type=dc
+V0 (VDD VSS) vsource dc=vdd type=dc
+C0 (net1 VSS) capacitor c=20f
+R0 (VDD net1) resistor r=r
+simulatorOptions options reltol=1e-3 vabstol=1e-6 iabstol=1e-12 temp=27 \
+    tnom=27 scalem=1.0 scale=1.0 gmin=1e-12 rforce=1 maxnotes=5 maxwarns=5 \
+    digits=5 cols=80 pivrel=1e-3 sensfile="../psf/sens.output" \
+    checklimitdest=psf 
+ac ac start=1 stop=2T annotate=status 
+dcOp dc write="spectre.dc" maxiters=150 maxsteps=10000 annotate=status
+dcOpInfo info what=oppoint where=rawfile
+modelParameter info what=models where=rawfile
+element info what=inst where=rawfile
+outputParameter info what=output where=rawfile
+designParamVals info what=parameters where=rawfile
+primitives info what=primitives where=rawfile
+subckts info what=subckts where=rawfile
+saveOptions options save=allpub

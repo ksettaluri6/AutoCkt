@@ -1,0 +1,41 @@
+database_dir: "bag_deep_ckt/checkpoint/db/two_stage_opamp_ngspice"
+
+measurement:
+  meas_params: {} # high level measurement params go here for post process
+  testbenches:
+    ac_dc:
+      netlist_template: "/tools/projects/ksettaluri6/BAG2_TSMC16FFC_tutorial/bag_deep_ckt/eval_engines/spectre/netlist_templates/two_stage_opamp_16nm.scs"
+      tb_module: "bag_deep_ckt.eval_engines.spectre.script_test.opamp_meas_man"
+      tb_class: "ACTB"
+      post_process_function: "process_ac" # a class method defined in meas manager
+      tb_params: {} # lower level params for tb evaluation goes here
+
+params:
+  tail1: !!python/tuple [4.0,20.0,2.0]
+  tail2: !!python/tuple [4.0,20.0,2.0]
+  tailcm: !!python/tuple [4.0,20.0,2.0]
+  in: !!python/tuple [4.0,20.0,2.0]
+  ref: !!python/tuple [4.0,20.0,2.0]
+  diode1: !!python/tuple [4.0,20.0,2.0]
+  ngm1: !!python/tuple [4.0,20.0,2.0]
+  diode2: !!python/tuple [4.0,20.0,2.0]
+  ngm2: !!python/tuple [4.0,20.0,2.0]
+  rfb: !!python/tuple [100.0, 6000.0, 100.0]
+  cfb: !!python/tuple [!!float 10.0e-15, !!float 150.0e-15, !!float 5.0e-15]
+
+spec_range:
+  gain: [!!float 1, null, 1]
+  funity: [!!float 300.0e+6, null, 1]
+  pm: [60.0, null, 1]
+
+normalize: !!python/tuple [350.0e+6,30,60]
+
+target_spec:
+  gain: !!python/tuple [1,1]
+  funity: !!python/tuple [!!float 350.0e+6, !!float 350.0e+6]
+  pm: !!python/tuple [60,60]
+
+specs_sweep:
+  gain: !!python/tuple [1, 150]
+  funity: !!python/tuple [!!float 1.0e+6, !!float 200.0e+6]
+  pm: [60.0, 75.0]

@@ -1,0 +1,48 @@
+database_dir: "bag_deep_ckt/checkpoint/db/two_stage_opamp_ngspice"
+eval_core_package: "eval_engines.NGspice.ngspiceEvalEngine"
+eval_core_class: "NgspiceEvaluationCore"
+measurement:
+  measurement_module: "eval_engines.NGspice.TwoStageComplete"
+  measurement_class: "TwoStageMeasManager"
+  root_dir: "/scratch/data/two_stage_opamp_ngspice_oracle"
+  tb_params:
+    feedback_factor: !!float 1.0
+    tot_err:  !!float 0.01
+  num_process: 1
+  netlists:
+    ol:
+      cir_path: "bag_deep_ckt/eval_engines/NGspice/ngspice_inputs/netlist/two_stage_full/two_stage_ol.cir"
+      wrapper_module: "eval_engines.NGspice.TwoStageComplete"
+      wrapper_class: "TwoStageOpenLoop"
+    cm:
+      cir_path: "bag_deep_ckt/eval_engines/NGspice/ngspice_inputs/netlist/two_stage_full/two_stage_cm.cir"
+      wrapper_module: "eval_engines.NGspice.TwoStageComplete"
+      wrapper_class: "TwoStageCommonModeGain"
+    ps:
+      cir_path: "bag_deep_ckt/eval_engines/NGspice/ngspice_inputs/netlist/two_stage_full/two_stage_ps.cir"
+      wrapper_module: "eval_engines.NGspice.TwoStageComplete"
+      wrapper_class: "TwoStagePowerSupplyGain"
+    tran:
+      cir_path: "bag_deep_ckt/eval_engines/NGspice/ngspice_inputs/netlist/two_stage_full/two_stage_tran.cir"
+      wrapper_module: "eval_engines.NGspice.TwoStageComplete"
+      wrapper_class: "TwoStageTransient"
+
+params:
+  mp1:  !!python/tuple [1, 100, 1]
+  mn1:  !!python/tuple [1, 100, 1]
+  mp3:  !!python/tuple [1, 100, 1]
+  mn3:  !!python/tuple [1, 100, 1]
+  mn4:  !!python/tuple [1, 100, 1]
+  mn5:  !!python/tuple [1, 100, 1]
+  cc:   !!python/tuple [!!float 0.1e-12, !!float 10.0e-12, !!float 0.1e-12]
+
+
+spec_range:
+  gain: [!!float 300.0, null, 1]
+  ugbw: [!!float 10.0e6, null, 1] #Hz
+  pm: [!!float 60.0, null, 1]
+  tset: [null, !!float 90.0e-9, 1] #Seconds
+  psrr: [!!float 50.0, null, 1] #db
+  cmrr: [!!float 50.0, null, 1] #db
+  offset_sys: [null, !!float 1.0e-3, 1] #Volts
+  ibias: [null, !!float 0.2e-3, 1] #Amper

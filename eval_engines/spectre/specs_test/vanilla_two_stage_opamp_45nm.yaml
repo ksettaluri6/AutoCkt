@@ -1,0 +1,47 @@
+database_dir: "bag_deep_ckt/checkpoint/db/vanilla_two_stage_opamp_45nm"
+
+measurement:
+  meas_params: {} # high level measurement params go here for post process
+  testbenches:
+    ac_dc:
+      netlist_template: "/tools/projects/ksettaluri6/BAG2_TSMC16FFC_tutorial/bag_deep_ckt/eval_engines/spectre/netlist_templates/vanilla_two_stage_amp_45nm.scs"
+      tb_module: "bag_deep_ckt.eval_engines.spectre.script_test.vanilla_opamp_meas_man_45nm"
+      tb_class: "ACTB"
+      post_process_function: "process_ac" # a class method defined in meas manager
+      tb_params: {} # lower level params for tb evaluation goes here
+
+params:
+  tail: !!python/tuple [1.0,100.0,1.0]
+  in: !!python/tuple [1.0,100.0,1.0]
+  gm: !!python/tuple [1.0,100.0,1.0]
+  load: !!python/tuple [1.0,100.0,1.0]
+  load2: !!python/tuple [1.0,100.0,1.0]
+  mir: !!python/tuple [1.0,100.0,1.0]
+  cc: !!python/tuple [!!float 0.1e-12, !!float 10.0e-12, !!float 0.1e-15]
+
+spec_range:
+  gain: [!!float 1, null, 1]
+  funity: [!!float 300.0e+6, null, 1]
+  pm: [60.0, null, 1]
+
+normalize: !!python/tuple [!!float 950000.0,350,!!float 0.001,60]
+
+target_spec:
+  gain: !!python/tuple [200,300]
+  funity: !!python/tuple [!!float 1.0e+6, !!float 1.0e+7]
+  pm: !!python/tuple [60,60]
+  ibias_max: !!python/tuple [0.0001, 0.01]
+
+#For run with original reward 
+#specs_sweep:
+#  gain: !!python/tuple [200, 400]
+#  funity: !!python/tuple [!!float 1.0e+6, !!float 2.5e+7]
+#  pm: [60.0, 60.000000001]
+#  ibias_max: [0.0001, 0.01]
+
+#Run with modified reward
+specs_sweep:
+  gain: !!python/tuple [50, 300]
+  funity: !!python/tuple [!!float 1.0e+6, !!float 2.5e+7]
+  pm: [60.0, 60.000000001]
+  ibias_max: [0.0001, 0.01]

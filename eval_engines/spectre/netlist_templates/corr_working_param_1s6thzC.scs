@@ -1,0 +1,225 @@
+// Generated for: spectre
+// Generated on: May  9 16:13:08 2019
+// Design library name: AAAFOO_TEST_OP_AMP
+// Design cell name:
+//OPAMP_TWO_STAGE_lch_90n_swp_spec_file_params_1S6thzC_MEAS_opamp_ac_TB_ac
+// Design view name: config
+simulator lang=spectre
+global 0
+parameters tail2=10.0 in=4.0 ngm2=8.0 tailcm=10.0
+parameters diode2=4.0 ngm1=4.0 diode1=12.0 ref=8.0 tail1=4.0
+
+parameters cfb=1.350000e-13 gain_cmfb=2.000000e+02 rfb=2.900000e+03 \
+    vincm=5.000000e-01 voutcm=5.000000e-01 cload=2.200000e-14 \
+    fndec=1.000000e+01 fstop=1.000000e+10 fstart=1.000000e+04 \
+    ibias=2.000000e-06 vdd=1.000000e+00
+include "/tools/tstech16/CLN16FFC/PDK_RF/models/crn16ffcll_1d8_sp_v1d0_2p1_usage.scs" section=TTMacro_MOS_MOSCAP
+include "/tools/tstech16/CLN16FFC/PDK_RF/models/crn16ffcll_1d8_sp_v1d0_2p1_usage.scs" section=TT_RES_BIP_DIO_DISRES
+include "/tools/tstech16/CLN16FFC/PDK_RF/models/crn16ffcll_1d8_sp_v1d0_2p1_usage.scs" section=TT_MOM
+include "/tools/tstech16/CLN16FFC/PDK_RF/models/crn16ffcll_1d8_sp_v1d0_2p1_usage.scs" section=TT_SCR
+include "/tools/tstech16/CLN16FFC/PDK_RF/models/crn16ffcll_1d8_sp_v1d0_2p1_usage.scs" section=TT_R_METAL
+
+// Library name: analogLib
+// Cell name: ideal_balun
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+subckt ideal_balun d c p n
+    K0 (d 0 p c) transformer n1=2
+    K1 (d 0 c n) transformer n1=2
+ends ideal_balun
+// End of subcircuit definition.
+
+// Library name: BAG_prim
+// Cell name: pmos4_lvt
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+subckt pmos4_lvt B D G S
+parameters l=60n w=500n nf=1
+    M0 (D G S B) pch_lvt_mac l=l nfin=w w=10n+48n*(w-1) multi=1 nf=nf \
+        sd=74.0n sa=90n sb=90n ploda1=16.0n ploda2=0 ploda3=0 plodb1=16.0n \
+        plodb2=0 plodb3=0 nf_flag=1 smbt=1M smbb=1M dinsaflag=0 ppitch=0 \
+        spot=103.00n spob=103.00n spotl1=103.00n spobl1=103.00n \
+        spotl2=103.00n spobl2=103.00n spotr1=103.00n spobr1=103.00n \
+        spotr2=103.00n spobr2=103.00n
+ends pmos4_lvt
+// End of subcircuit definition.
+
+// Library name: AAAFOO_TEST_OP_AMP
+// Cell name: pch_stack_6
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+subckt pch_stack_6 B D G S
+    XP (B D G S) pmos4_lvt l=90n w=4 nf=tail2
+ends pch_stack_6
+// End of subcircuit definition.
+
+// Library name: AAAFOO_TEST_OP_AMP
+// Cell name: pch_stack_cm
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+subckt pch_stack_cm B D G S
+    XP (B D G S) pmos4_lvt l=90n w=4 nf=tailcm
+ends pch_stack_cm
+// End of subcircuit definition.
+
+// Library name: BAG_prim
+// Cell name: nmos4_lvt
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+subckt nmos4_lvt B D G S
+parameters l=60n w=500n nf=1
+    M0 (D G S B) nch_lvt_mac l=l nfin=w w=10n+48n*(w-1) multi=1 nf=nf \
+        sd=74.0n sa=90n sb=90n ploda1=16.0n ploda2=0 ploda3=0 plodb1=16.0n \
+        plodb2=0 plodb3=0 nf_flag=1 smbt=1M smbb=1M dinsaflag=0 ppitch=0 \
+        spot=103.00n spob=103.00n spotl1=103.00n spobl1=103.00n \
+        spotl2=103.00n spobl2=103.00n spotr1=103.00n spobr1=103.00n \
+        spotr2=103.00n spobr2=103.00n
+ends nmos4_lvt
+// End of subcircuit definition.
+
+// Library name: AAAFOO_TEST_OP_AMP
+// Cell name: nch_stack_8
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+subckt nch_stack_8 B D G S
+    XN (B D G S) nmos4_lvt l=90n w=4 nf=diode2
+ends nch_stack_8
+// End of subcircuit definition.
+
+// Library name: AAAFOO_TEST_OP_AMP
+// Cell name: nch_stack_gm
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+subckt nch_stack_gm B D G S
+    XN (B D G S) nmos4_lvt l=90n w=4 nf=ngm1
+ends nch_stack_gm
+// End of subcircuit definition.
+
+// Library name: AAAFOO_TEST_OP_AMP
+// Cell name: nch_stack_6
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+subckt nch_stack_6 B D G S
+    XN (B D G S) nmos4_lvt l=90n w=4 nf=ngm2
+ends nch_stack_6
+// End of subcircuit definition.
+
+// Library name: AAAFOO_TEST_OP_AMP
+// Cell name: nch_stack_5
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+subckt nch_stack_5 B D G S
+    XN (B D G S) nmos4_lvt l=90n w=4 nf=diode1
+ends nch_stack_5
+// End of subcircuit definition.
+
+// Library name: AAAFOO_TEST_OP_AMP
+// Cell name: pch_stack_3
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+subckt pch_stack_3 B D G S
+    XP (B D G S) pmos4_lvt l=90n w=4 nf=ref
+ends pch_stack_3
+// End of subcircuit definition.
+
+// Library name: AAAFOO_TEST_OP_AMP
+// Cell name: pch_stack_tail
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+subckt pch_stack_tail B D G S
+    XP (B D G S) pmos4_lvt l=90n w=4 nf=tail1*2
+ends pch_stack_tail
+// End of subcircuit definition.
+
+// Library name: AAAFOO_TEST_OP_AMP
+// Cell name: pch_stack
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+subckt pch_stack B D G S
+    XP (B D G S) pmos4_lvt l=90n w=4 nf=in
+ends pch_stack
+// End of subcircuit definition.
+
+// Library name: AAAFOO_TEST_OP_AMP
+// Cell name: OPAMP_TWO_STAGE_lch_90n_swp_spec_file_params_1S6thzC
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+subckt OPAMP_TWO_STAGE_lch_90n_swp_spec_file_params_1S6thzC midn midp outn \
+        outp VDD VSS bias cmbias inn inp ref
+    XCML (VDD outp cmbias VDD) pch_stack_cm
+    XTAIL2L (VDD outp bias VDD) pch_stack_6
+    XCMR (VDD outn cmbias VDD) pch_stack_cm
+    XTAIL2R (VDD outn bias VDD) pch_stack_6
+    XDUMMY0 (VSS VSS VSS VSS) nmos4_lvt l=90n w=4 nf=36
+    XDUMMY2 (VSS midp VSS VSS) nmos4_lvt l=90n w=4 nf=2
+    XDUMMY1 (VSS midn VSS VSS) nmos4_lvt l=90n w=4 nf=2
+    XDIO2L (VSS outp midn VSS) nch_stack_8
+    XDIO2R (VSS outn midp VSS) nch_stack_8
+    XNGML (VSS midn midp VSS) nch_stack_gm
+    XNGMR (VSS midp midn VSS) nch_stack_gm
+    XDUMMY5 (VDD midn VDD VDD) pmos4_lvt l=90n w=4 nf=2
+    XDUMMY4 (VDD bias VDD VDD) pmos4_lvt l=90n w=4 nf=2
+    XDUMMY3 (VDD VDD VDD VDD) pmos4_lvt l=90n w=4 nf=114
+    XDUMMY6 (VDD midp VDD VDD) pmos4_lvt l=90n w=4 nf=2
+    XNGM2L (VSS outp midn VSS) nch_stack_6
+    XNGM2R (VSS outn midp VSS) nch_stack_6
+    XDIOR (VSS midp midp VSS) nch_stack_5
+    XDIOL (VSS midn midn VSS) nch_stack_5
+    XRES (VDD bias ref tail_ref) pch_stack_3
+    XREF (VDD tail_ref bias VDD) pch_stack_3
+    XTAIL (VDD tail bias VDD) pch_stack_tail
+    XINR (VDD midp inn tail) pch_stack
+    XINL (VDD midn inp tail) pch_stack
+ends OPAMP_TWO_STAGE_lch_90n_swp_spec_file_params_1S6thzC
+// End of subcircuit definition.
+
+// Library name: AAAFOO_TEST_OP_AMP
+// Cell name:
+//OPAMP_TWO_STAGE_lch_90n_swp_spec_file_params_1S6thzC_WRAPPER_opamp_dm
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+subckt \
+        OPAMP_TWO_STAGE_lch_90n_swp_spec_file_params_1S6thzC_WRAPPER_opamp_dm \
+        midac middc outac outdc VDD VSS ibias inac indc voutcm
+    XBALMID (midac middc midp midn) ideal_balun
+    XBALOUT (outac outdc outp outn) ideal_balun
+    XBALIN (inac indc inp inn) ideal_balun
+    ECMFB (cmbias VSS outdc voutcm) vcvs gain=gain_cmfb min=0.0 max=vdd
+    CFBP (outp xp) capacitor c=cfb
+    CFBN (outn xn) capacitor c=cfb
+    COUTN (outn VSS) capacitor c=cload
+    COUTP (outp VSS) capacitor c=cload
+    RFBP (midn xp) resistor r=rfb c=200f
+    RFBN (midp xn) resistor r=rfb c=200f
+    XDUT (midn midp outn outp VDD VSS ibias cmbias inn inp indc) \
+        OPAMP_TWO_STAGE_lch_90n_swp_spec_file_params_1S6thzC
+ends OPAMP_TWO_STAGE_lch_90n_swp_spec_file_params_1S6thzC_WRAPPER_opamp_dm
+// End of subcircuit definition.
+
+// Library name: AAAFOO_TEST_OP_AMP
+// Cell name:
+// OPAMP_TWO_STAGE_lch_90n_swp_spec_file_params_1S6thzC_MEAS_opamp_ac_TB_ac
+// View name: schematic
+// Inherited view list: spectre schematic calibre veriloga
+IBIAS (ibias VSS) isource dc=ibias type=dc
+VSUP (VDD VSS) vsource dc=vdd mag=1 type=dc
+VOUTCM (outcm VSS) vsource dc=voutcm mag=1 type=dc
+VINCM (incm VSS) vsource dc=vincm mag=1 type=dc
+VGND (VSS 0) vsource dc=0 type=dc
+VINAC (vin VSS) vsource dc=0 mag=1 type=dc
+XDUT (midac middc vout outdc VDD VSS ibias vin incm outcm) \
+        OPAMP_TWO_STAGE_lch_90n_swp_spec_file_params_1S6thzC_WRAPPER_opamp_dm
+simulatorOptions options reltol=1e-3 vabstol=1e-6 iabstol=1e-12 temp=25.0 \
+    tnom=27 scalem=1.0 scale=1.0 gmin=1e-12 rforce=1 maxnotes=5 maxwarns=5 \
+    digits=5 cols=80 pivrel=1e-3 sensfile="../psf/sens.output" \
+    checklimitdest=psf 
+ac ac start=fstart stop=fstop dec=fndec annotate=status 
+dcOp dc write="spectre.dc" maxiters=150 maxsteps=10000 annotate=status
+dcOpInfo info what=oppoint where=rawfile
+modelParameter info what=models where=rawfile
+element info what=inst where=rawfile
+outputParameter info what=output where=rawfile
+designParamVals info what=parameters where=rawfile
+primitives info what=primitives where=rawfile
+subckts info what=subckts where=rawfile
+saveOptions options save=allpub

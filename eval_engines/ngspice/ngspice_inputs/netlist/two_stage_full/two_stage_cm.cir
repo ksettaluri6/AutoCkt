@@ -1,0 +1,46 @@
+two_stage_amp common mode gain test
+
+* Two stage OPAMP
+.include "/tools/projects/ISG/isg_chips/projects/kourosh_DeepCkt/bag_workspace_GF14LPP/bag_deep_ckt/eval_engines/NGspice/ngspice_inputs/spice_models/45nm_bulk.txt"
+.param wp1=0.5u lp1=90n mp1=18
+.param wn1=0.5u ln1=90n mn1=38
+.param wn3=0.5u ln3=90n mn3=35
+.param wp3=0.5u lp3=90n mp3=158
+.param wn4=0.5u ln4=90n mn4=51
+.param wn5=0.5u ln5=90n mn5=98
+.param cc=3.1p
+.param ibias=30u
+.param cload=10p
+.param vcm=0.6
+
+mp1 net4 net4 VDD VDD pmos w=wp1 l=lp1 m=mp1
+mp2 net5 net4 VDD VDD pmos w=wp1 l=lp1 m=mp1
+mn1 net4 net2 net3 net3 nmos w=wn1 l=ln1 m=mn1
+mn2 net5 net1 net3 net3 nmos w=wn1 l=ln1 m=mn1
+mn3 net3 net7 VSS VSS nmos w=wn3 l=ln3 m=mn3
+mn4 net7 net7 VSS VSS nmos w=wn4 l=ln4 m=mn4
+mp3 net6 net5 VDD VDD pmos w=wp3 l=lp3 m=mp3
+mn5 net6 net7 VSS VSS nmos w=wn5 l=ln5 m=mn5
+cc net5 net6 cc
+ibias VDD net7 ibias
+
+vin in 0 dc=0 ac=1.0
+ein1 net1 cm in 0 1
+ein2 net2 cm in 0 1
+vcm cm 0 dc=vcm
+
+vdd VDD 0 dc=1.2
+vss 0 VSS dc=0
+CL net6 0 cload
+
+.ac dec 10 1 10G
+
+.control
+run
+set units=degrees
+set wr_vecnames
+option numdgt=7
+wrdata cm.csv v(net6)
+.endc
+
+.end

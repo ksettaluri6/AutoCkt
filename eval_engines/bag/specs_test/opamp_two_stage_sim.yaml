@@ -1,0 +1,185 @@
+impl_lib: 'AAAFOO_TEST_OP_AMP'
+dsn_basename: 'OPAMP_TWO_STAGE'
+
+layout_package: 'analog_ec.layout.amplifiers.opamp'
+layout_class: 'OpAmpTwoStage'
+
+dut_lib: 'bag_analog_ec'
+dut_cell: 'opamp_two_stage'
+
+rcx_params: {}
+
+routing_grid:
+  bot_dir: y
+  layers: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  spaces: [0.05, 0.056, 0.05, 0.06, 0.1, 0.06, 0.1, 0.36, 0.36]
+  width_override:
+    2: {2: 0.13}
+    3: {3: 0.13}
+    4: {2: 0.14}
+    5: {2: 0.14}
+    6: {2: 0.14}
+    7: {2: 0.14}
+  widths: [0.04, 0.04, 0.04, 0.06, 0.08, 0.06, 0.08, 0.36, 0.36]
+
+sweep_params:
+  #lch: [9.0e-8] #tech dependent ->  16 nm
+  swp_spec_file: [params0]
+
+layout_params:
+  root_dir: 'data/opamp_two_stage' #tmp directory that it saves sims, should be same as root_dir top-level
+  swp_spec_file: params0 #lch -
+  lch: 9.0e-8
+  ptap_w: 6
+  ntap_w: 6
+  w_dict:
+    load: 4
+    in: 4
+    tail: 4
+  th_dict:
+    load: 'lvt'
+    in: 'lvt'
+    tail: 'lvt'
+  seg_dict:
+    tail1: 12.0 
+    tail2: 14.0 #16
+    tailcm: 16.0
+    in: 2.0 
+    ref: 2.0 
+    diode1: 2.0 
+    ngm1: 12.0 
+    diode2: 6.0 
+    ngm2: 2.0 
+  stack_dict:
+    tail: 1
+    in: 1
+    diode: 1
+    ngm: 1
+  ndum: 4
+  tr_widths:
+    bias: {4: 1}
+    in: {4: 1}
+    out: {4: 1}
+    tail: {4: 1}
+  tr_spaces:
+    bias: {4: 2}
+    in: {4: 2}
+    out: {4: 2}
+    tail: {4: 2}
+  show_pins: True
+  guard_ring_nf: 0
+  top_layer: 4
+
+dsn_specs:
+  i1_unit: [10.0e-07]
+  i1_min_size: 12
+  vg_list: [0.5]
+  vout_list: [0.5]
+  cpar1: 5.0e-15
+  cload: 100.0e-15
+  f_unit: 300.0e+6
+  phase_margin: 60.0
+  res_var: 0.2
+  l: 9.0e-08
+  vstar_gm_min: 0.067
+  ft_load_scale: 3.0
+  vds_tail_min: 0.1
+  seg_gm_min: 4
+  vdd: 1
+  pmos_input: true
+  load_stack_list: [1]
+
+view_name: 'netlist'
+env_list: ['tt', 'ff']
+root_dir: 'data/opamp_two_stage'
+summary_fname: 'summary.yaml'
+sim_spec_fname: 'opamp_two_stage_sim.yaml'
+database_dir: 'bag_deep_ckt/checkpoint/db/two_stage_opamp'
+eval_core_package: 'bag_deep_ckt.eval_engines.BAG.opamp_eval'
+eval_core_class: 'OpampEvaluationEngine'
+
+spec_range: #specs you want to meet, a range
+  funity: [300.0e+6, null]
+  pm: [60.0, null]
+  gain: [100.0, null]
+
+params:
+  layout_params:
+    seg_dict:
+      tail1: [2.0,20.0,2.0]
+      tail2: [2.0,20.0,2.0]
+      tailcm: [2.0,20.0,2.0]
+      in: [2.0,20.0,2.0]
+      ref: [2.0,20.0,2.0]
+      diode1: [2.0,20.0,2.0]
+      ngm1: [2.0,20.0,2.0]
+      diode2: [2.0,20.0,2.0]
+      ngm2: [2.0,20.0,2.0]
+  measurements:
+    rfb: [100.0, 6000.0, 100.0]
+    cfb: [10.0e-15, 150.0e-15, 5.0e-15]
+
+dut_wrappers:
+  - name: 'opamp_dm'
+    lib: 'bag_analog_ec'
+    cell: 'opamp_two_stage_wrapper_dm'
+    params:
+      cfb: 'cfb'
+      cload: 'cload'
+      gain_cmfb: 'gain_cmfb'
+      rfb: 'rfb'
+      vdd: 'vdd'
+
+
+measurements:
+  - meas_type: 'opamp_ac'
+    meas_package: 'ckt_dsn_ec.analog.amplifier.opamp_two_stage'
+    meas_class: 'OpAmpTwoStageChar'
+    out_fname: 'op_amp.yaml'
+    rfb: 400.0 
+    cfb: 1.3e-13
+    res_var: 0.2
+    cmin_scale: 1.0
+    cmax_scale: 2.0
+    num_pts: 11
+    phase_margin: 60.0
+    testbenches:
+      ac:
+        tb_package: 'verification_ec.ac.core'
+        tb_class: 'ACTB'
+        tb_lib: 'bag_testbenches_ec'
+        tb_cell: 'amp_tb_ac'
+        sch_params:
+          dut_conns:
+            ibias: 'ibias'
+            inac: 'vin'
+            indc: 'incm'
+            midac: 'midac'
+            middc: 'middc'
+            outac: 'vout'
+            outdc: 'outdc'
+            voutcm: 'outcm'
+          ibias_dict:
+            BIAS: ['ibias', 'VSS', 'ibias']
+          vbias_dict:
+            INAC: ['vin', 'VSS', 0, {'acm': 1.0}]
+            INCM: ['incm', 'VSS', 'vincm']
+            OUTCM: ['outcm', 'VSS', 'voutcm']
+          no_cload: True
+        wrapper_type: 'opamp_dm'
+        fstart: 1.0e+4
+        fstop: 1.0e+10
+        fndec: 10
+        sim_vars:
+          vdd: 1.0
+          ibias: 2.0e-6
+          vinac: 1.0
+          vincm: 0.5
+          vindc: 0.0
+          voutcm: 0.5
+          rfb: 400.0 
+          cfb: 1.3e-13
+          cload: 22.0e-15
+          gain_cmfb: 200.0
+        sim_outputs:
+          'vout': "getData(\"/vout\", ?result 'ac)"
