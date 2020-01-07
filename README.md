@@ -1,5 +1,5 @@
 # AutoCkt
-Deep Reinforcement Learning of Analog Circuit Designs
+Code for [Deep Reinforcement Learning of Analog Circuit Designs](https://arxiv.org/), presented at Design Automation and Test in Europe, 2020. Note that the results shown in the paper include those from NGSpice and Spectre. NGSpice is free and can be installed online (see Setup section). Spectre requires a license, as well as access to the particular technology, the code for this will be pushed later.
 
 # Setup
 The RL agent interacts with the circuit environment to converge to parameters to meet a given design specification. The framework uses:
