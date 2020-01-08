@@ -1,30 +1,16 @@
 import ray
 import ray.tune as tune
 from ray.rllib.agents import ppo
-from bag_deep_ckt.autockt.envs.spectre_vanilla_opamp_45nm import TwoStageAmp
-from bag_deep_ckt.autockt.envs.spectre_fc import FoldedCascode 
+from autockt.envs.spectre_vanilla_opamp import TwoStageAmp
 
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--checkpoint_dir', '-cpd', type=str)
-args.add_argument('--env', '-env', type=str)
 args = parser.parse_args()
 ray.init()
 
-config_validation = {
-            "sample_batch_size": 200,
-            "train_batch_size": 1200,
-            "sgd_minibatch_size": 1200,
-            "num_sgd_iter":3,
-            "lr":1e-3,
-            "vf_loss_coeff":0.5,
-            "horizon":  60,#tune.grid_search([15,25]),
-            "num_gpus": 0,
-            "model":{"fcnet_hiddens": [64, 64]},
-            "num_workers": 7,
-            "env_config":{"generalize":False, "save_specs":False, "run_valid":True},
-            }
-
+#configures training of the agent with associated hyperparameters
+#See Ray documentation for details on each parameter
 config_train = {
             "sample_batch_size": 60,#200,
             "train_batch_size": 360,
@@ -39,9 +25,11 @@ config_train = {
             "env_config":{"generalize":True, "save_specs":True, "run_valid":False},
             }
 
+#Runs training and saves the result in ~/ray_results/train_ngspice_45nm
+#If checkpoint fails for any reason, training can be restored 
 if not args.checkpoint_dir:
     trials = tune.run_experiments({
-        "train_45nm": {
+        "train_ngspice_45nm": {
         "checkpoint_freq":1,
         "run": "PPO",
         "env": TwoStageAmp,
@@ -50,7 +38,6 @@ if not args.checkpoint_dir:
     })
 else:
     print("RESTORING NOW!!!!!!")
-    #print(trials[0]._checkpoint.value)
     tune.run_experiments({
         "restore_ppo": {
         "run": "PPO",
