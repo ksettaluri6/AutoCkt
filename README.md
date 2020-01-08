@@ -1,5 +1,5 @@
 # AutoCkt
-Code for [Deep Reinforcement Learning of Analog Circuit Designs](https://arxiv.org/), presented at Design Automation and Test in Europe, 2020. Note that the results shown in the paper include those from NGSpice and Spectre. NGSpice is free and can be installed online (see Setup section). Spectre requires a license, as well as access to the particular technology; the code for this will be open sourced at a later time.
+Code for [Deep Reinforcement Learning of Analog Circuit Designs](https://arxiv.org/abs/2001.01808), presented at Design Automation and Test in Europe, 2020. Note that the results shown in the paper include those from NGSpice and Spectre. NGSpice is free and can be installed online (see Setup). Spectre requires a license, as well as access to the particular technology; the code for this will be open sourced at a later time.
 
 ## Setup
 This setup requires Anaconda. In order to obtain the required packages, run the command below from the top level directory of the repo to install the Anaconda environment:
@@ -32,8 +32,11 @@ Make sure that you are in the Anaconda environment. From the top level directory
 ```
 python autockt/val_autobag_ray.py
 ```
-The training checkpoints will be saved in your home directory under ray\_results. Tensorboard can be used to automatically load results using the command:
+The training checkpoints will be saved in your home directory under ray\_results. Tensorboard can be used to load reward and loss plots using the command:
 
 ```
 tensorboard --logdir path/to/checkpoint
 ```
+
+## Validating AutoCkt
+
