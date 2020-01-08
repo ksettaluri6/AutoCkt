@@ -11,11 +11,17 @@ conda env create -f environment.yml
 NGspice 2.7 needs to be installed separately, via this [installation link](https://sourceforge.net/projects/ngspice/files/ng-spice-rework/old-releases/27/). Page 607 of the pdf manual on the website has instructions on how to install. Note that you might beed to remove some of the flags to get it to install correctly for your machine. 
 
 ## Code Setup
-The code is setup in the following way. Starting at top level:
+The code is setup as follows:
 
 <img src=readme_images/flowchart.png width="500">
 
-Format: ![Alt Text](url)
+The top level directory contains two sub-directories:
+* AutoCkt: Contains all of the reinforcement code
+    * val_autobag_ray.py: top level RL script, used to set hyperparameters and run training
+    * rollout.py: used for validation of the trained agent, see file for how to run
+    * envs/ directory: contains all OpenAI Gym environments. These function as the agent in the RL loop and contain information about parameter space, valid action steps and reward.
+* eval\_engines: Contains all of the code pertaining to simulators
+    * netlist templates: these are circuit netlists exported to 
 
 The RL agent interacts with the circuit environment to converge to parameters to meet a given design specification. The framework uses:
 
