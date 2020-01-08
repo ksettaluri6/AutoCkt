@@ -13,7 +13,7 @@ NGspice 2.7 needs to be installed separately, via this [installation link](https
 ## Code Setup
 The code is setup in the following way. Starting at top level:
 
-<img src=readme_images/flowchart.png width="50">
+<img src=readme_images/flowchart.png width="1000">
 
 Format: ![Alt Text](url)
 
