@@ -27,10 +27,14 @@ The top level directory contains two sub-directories:
         * script_test/: directory with files that test functionality of interface scripts  
 
 ## Training AutoCkt
-Make sure that you are in the Anaconda environment. From the top level directory run:
-
+Make sure that you are in the Anaconda environment. Before running training, the circuit netlist must be modified in order to point to the right library files in your directory. To do this, run the following command:
 ```
-python autockt/val_autobag_ray.py
+python eval_engines/ngspice/ngspice_inputs/correct_inputs.py 
+```
+
+To train the agent, open ipython from the top level directory and then: 
+```
+run autockt/val_autobag_ray.py
 ```
 The training checkpoints will be saved in your home directory under ray\_results. Tensorboard can be used to load reward and loss plots using the command:
 
