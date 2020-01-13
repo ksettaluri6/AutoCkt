@@ -1,4 +1,4 @@
-from bag_deep_ckt.eval_engines.spectre.core import EvaluationEngine
+from eval_engines.spectre.core import EvaluationEngine
 import numpy as np
 import pdb
 import IPython

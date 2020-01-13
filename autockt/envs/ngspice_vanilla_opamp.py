@@ -18,8 +18,9 @@ import IPython
 import itertools
 from eval_engines.util.core import *
 import pickle
+import os
 
-from eval_engines.spectre.script_test.vanilla_opamp_meas_man import *
+from eval_engines.ngspice.TwoStageClass import *
 
 #way of ordering the way a yaml file is read
 class OrderedDictYAMLLoader(yaml.Loader):
@@ -59,42 +60,34 @@ class TwoStageAmp(gym.Env):
     PERF_LOW = -1
     PERF_HIGH = 0
 
-    CIR_YAML = "/tools/projects/ksettaluri6/BAG2_TSMC16FFC_tutorial/bag_deep_ckt/eval_engines/spectre/specs_test/vanilla_two_stage_opamp.yaml"
+    #obtains yaml file
+    path = os.getcwd()
+    CIR_YAML = path+'/eval_engines/ngspice/ngspice_inputs/yaml_files/two_stage_opamp.yaml'
 
     def __init__(self, env_config):
-        multi_goal = env_config.get("multi_goal",False)
-        generalize = env_config.get("generalize",False)
+        self.multi_goal = env_config.get("multi_goal",False)
+        self.generalize = env_config.get("generalize",False)
         num_valid = env_config.get("num_valid",50)
-        specs_save = env_config.get("save_specs", False)
-        valid = env_config.get("run_valid", False)
-
-        generalize=True
-        num_valid=50
-        specs_save=True
-        valid=False
+        self.specs_save = env_config.get("save_specs", False)
+        self.valid = env_config.get("run_valid", False)
 
         self.env_steps = 0
         with open(TwoStageAmp.CIR_YAML, 'r') as f:
             yaml_data = yaml.load(f, OrderedDictYAMLLoader)
 
-        self.multi_goal = multi_goal
-        self.generalize = generalize
-        self.save_specs = specs_save
-        self.valid = valid
-
         # design specs
-        if generalize == False:
-            specs = yaml_data['target_spec']
+        if self.generalize == False:
+            specs = yaml_data['target_specs']
         else:
-            load_specs_path = "/tools/projects/ksettaluri6/BAG2_TSMC16FFC_tutorial/bag_deep_ckt/autockt/gen_specs/specs_gen_spectre_opamp_simple"
+
+            load_specs_path = "autockt/gen_specs/ngspice_specs_gen_two_stage_opamp"
             with open(load_specs_path, 'rb') as f:
                 specs = pickle.load(f)
 
         self.specs = OrderedDict(sorted(specs.items(), key=lambda k: k[0]))
-        #if specs_save:
-        #    print(self.specs)
-        #    with open("specs_"+str(num_valid)+str(random.randint(1,100000)), 'wb') as f:
-        #        pickle.dump(self.specs, f)
+        if self.specs_save:
+            with open("specs_"+str(num_valid)+str(random.randint(1,100000)), 'wb') as f:
+                pickle.dump(self.specs, f)
         
         self.specs_ideal = []
         self.specs_id = list(self.specs.keys())
@@ -112,8 +105,7 @@ class TwoStageAmp(gym.Env):
             self.params.append(param_vec)
         
         #initialize sim environment
-        self.sim_env = OpampMeasMan(TwoStageAmp.CIR_YAML) 
-        
+        self.sim_env = TwoStageClass(yaml_path=TwoStageAmp.CIR_YAML, num_process=1) 
         self.action_meaning = [-1,0,2] 
         self.action_space = spaces.Tuple([spaces.Discrete(len(self.action_meaning))]*len(self.params_id))
         #self.action_space = spaces.Discrete(len(self.action_meaning)**len(self.params_id))
@@ -203,12 +195,8 @@ class TwoStageAmp(gym.Env):
             print('re:', reward)
             print('-'*10)
 
-        print(self.cur_specs)
-        print(self.cur_params_idx)
-        #print("Ideal:"+str(self.specs_ideal))
         self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params_idx])
         self.env_steps = self.env_steps + 1
-        #print("Step:"+str(self.env_steps))
 
         return self.ob, reward, done, {}
 
@@ -233,14 +221,6 @@ class TwoStageAmp(gym.Env):
             else:
                 pos_val.append(1)
 
-        #particular case where meet ugbw/pm but not gain 
-        #if (pos_val[0]==1) and (pos_val[1]==0) and (pos_val[3]==1):
-        #    reward=0
-        #    if rel_specs[0] > 0.10:
-        #      rel_specs[0] = -1.0*rel_specs[0]
-        #    if rel_specs[3] > 0.10:
-        #      rel_specs[3] = -1.0*rel_specs[3]
-        #    reward = np.sum(np.array(rel_specs))
         return reward if reward < -0.02 else 10
 
     def update(self, params_idx):
@@ -254,19 +234,10 @@ class TwoStageAmp(gym.Env):
         params = [self.params[i][params_idx[i]] for i in range(len(self.params_id))]
         param_val = [OrderedDict(list(zip(self.params_id,params)))]
         
-        #param_val[0]['tail']=9.0
-        #param_val[0]['in']=38.0
-        #param_val[0]['gm']=24.0
-        #param_val[0]['load']=10
-        #param_val[0]['mir']=20
-        #param_val[0]['gm']=4
-
         #run param vals and simulate
-        cur_specs = OrderedDict(sorted(self.sim_env.evaluate(param_val)[0][1].items(), key=lambda k:k[0]))
+        cur_specs = OrderedDict(sorted(self.sim_env.create_design_and_simulate(param_val[0])[0][1].items(), key=lambda k:k[0]))
         cur_specs = np.array(list(cur_specs.values()))[:-1]
 
-        #proc = psutil.Process()
-        #print (proc.open_files())
         return cur_specs
 
 def main():

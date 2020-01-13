@@ -9,8 +9,8 @@ import yaml
 import importlib
 import random
 import numpy as np
-from bag_deep_ckt.eval_engines.util.core import IDEncoder, Design
-from bag_deep_ckt.eval_engines.spectre.parser import SpectreParser
+from eval_engines.util.core import IDEncoder, Design
+from eval_engines.spectre.parser import SpectreParser
 import IPython
 
 debug = False 

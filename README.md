@@ -32,6 +32,12 @@ Make sure that you are in the Anaconda environment. Before running training, the
 python eval_engines/ngspice/ngspice_inputs/correct_inputs.py 
 ```
 
+To generate the design specifications that the agent trains on, run:
+```
+python autockt/gen_specs.py --num_specs ##
+```
+The result is a pickle file dumped to the gen_specs/ folder.
+
 To train the agent, open ipython from the top level directory and then: 
 ```
 run autockt/val_autobag_ray.py

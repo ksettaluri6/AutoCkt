@@ -6,10 +6,7 @@ import IPython
 import argparse
 from collections import OrderedDict
 import pickle
-import bag_deep_ckt
 
-#Set the number of design specs you want to train on
-num_specs = 50 
 
 #way of ordering the way a yaml file is read
 class OrderedDictYAMLLoader(yaml.Loader):
@@ -44,11 +41,11 @@ class OrderedDictYAMLLoader(yaml.Loader):
       return mapping
 
 #Generate the design specifications and then save to a pickle file
-def gen_data(CIR_YAML, env):
+def gen_data(CIR_YAML, env, num_specs):
   with open(CIR_YAML, 'r') as f:
     yaml_data = yaml.load(f, OrderedDictYAMLLoader)
 
-  specs_range = yaml_data['specs_sweep']
+  specs_range = yaml_data['target_specs']
   specs_range_vals = list(specs_range.values())
   specs_valid = []
   for spec in specs_range_vals:
@@ -61,28 +58,16 @@ def gen_data(CIR_YAML, env):
   for key,value in specs_range.items():
       specs_range[key] = specs_valid[i]
       i+=1
-  specs_train = yaml_data['target_spec']
-  specs_val = []
-  for i,valid_arr in enumerate(list(specs_range.values())):
-      specs_val.append(valid_arr+list(specs_train.values())[i])
-  specs = specs_train
-  i = 0
-  for key,value in specs.items():
-      specs[key] = specs_val[i]
-      i+=1
-
-  with open("bag_deep_ckt/autockt/gen_specs/specs_gen_"+env, 'wb') as f:
-    pickle.dump(specs,f)
+  with open("autockt/gen_specs/ngspice_specs_gen_"+env, 'wb') as f:
+    pickle.dump(specs_range,f)
 
 def main():
   parser = argparse.ArgumentParser()
-  parser.add_argument('--env', type=str)
+  parser.add_argument('--num_specs', type=str)
   args = parser.parse_args()
-  if args.env == "spectre_opamp_simple":
-    CIR_YAML = "bag_deep_ckt/eval_engines/spectre/specs_test/" + "vanilla_two_stage_opamp.yaml"
-  elif args.env == "spectre_opamp_simple_45nm":
-    CIR_YAML = "bag_deep_ckt/eval_engines/spectre/specs_test/" + "vanilla_two_stage_opamp.yaml"
-  gen_data(CIR_YAML, args.env)
+  CIR_YAML = "eval_engines/ngspice/ngspice_inputs/yaml_files/two_stage_opamp.yaml"
+  
+  gen_data(CIR_YAML, "two_stage_opamp", int(args.num_specs))
 
 if __name__=="__main__":
   main()
