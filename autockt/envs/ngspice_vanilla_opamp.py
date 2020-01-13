@@ -235,8 +235,8 @@ class TwoStageAmp(gym.Env):
         param_val = [OrderedDict(list(zip(self.params_id,params)))]
         
         #run param vals and simulate
-        cur_specs = OrderedDict(sorted(self.sim_env.create_design_and_simulate(param_val[0])[0][1].items(), key=lambda k:k[0]))
-        cur_specs = np.array(list(cur_specs.values()))[:-1]
+        cur_specs = OrderedDict(sorted(self.sim_env.create_design_and_simulate(param_val[0])[1].items(), key=lambda k:k[0]))
+        cur_specs = np.array(list(cur_specs.values()))
 
         return cur_specs
 
