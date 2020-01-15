@@ -79,8 +79,7 @@ class TwoStageAmp(gym.Env):
         if self.generalize == False:
             specs = yaml_data['target_specs']
         else:
-
-            load_specs_path = "autockt/gen_specs/ngspice_specs_gen_two_stage_opamp"
+            load_specs_path = TwoStageAmp.path+"/autockt/gen_specs/ngspice_specs_gen_two_stage_opamp"
             with open(load_specs_path, 'rb') as f:
                 specs = pickle.load(f)
 
@@ -105,7 +104,7 @@ class TwoStageAmp(gym.Env):
             self.params.append(param_vec)
         
         #initialize sim environment
-        self.sim_env = TwoStageClass(yaml_path=TwoStageAmp.CIR_YAML, num_process=1) 
+        self.sim_env = TwoStageClass(yaml_path=TwoStageAmp.CIR_YAML, num_process=1, path=TwoStageAmp.path) 
         self.action_meaning = [-1,0,2] 
         self.action_space = spaces.Tuple([spaces.Discrete(len(self.action_meaning))]*len(self.params_id))
         #self.action_space = spaces.Discrete(len(self.action_meaning)**len(self.params_id))
@@ -151,20 +150,18 @@ class TwoStageAmp(gym.Env):
                     self.specs_ideal.append(spec[idx])
                 self.specs_ideal = np.array(self.specs_ideal)
         #print("num total:"+str(self.num_os))
-        print(self.obj_idx)
 
         #applicable only when you have multiple goals, normalizes everything to some global_g
         self.specs_ideal_norm = self.lookup(self.specs_ideal, self.global_g)
 
         #initialize current parameters
-        self.cur_params_idx = np.array([30, 30, 30, 30, 30, 30, 20])
+        self.cur_params_idx = np.array([30, 30, 30, 30, 30, 30, 30])
         self.cur_specs = self.update(self.cur_params_idx)
         cur_spec_norm = self.lookup(self.cur_specs, self.global_g)
         reward = self.reward(self.cur_specs, self.specs_ideal)
 
         #observation is a combination of current specs distance from ideal, ideal spec, and current param vals
         self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params_idx])
-        print(self.specs_ideal)
         return self.ob
  
     def step(self, action):
@@ -198,6 +195,9 @@ class TwoStageAmp(gym.Env):
         self.ob = np.concatenate([cur_spec_norm, self.specs_ideal_norm, self.cur_params_idx])
         self.env_steps = self.env_steps + 1
 
+        #print('cur ob:' + str(self.cur_specs))
+        #print('ideal spec:' + str(self.specs_ideal))
+        #print(reward)
         return self.ob, reward, done, {}
 
     def lookup(self, spec, goal_spec):
@@ -214,7 +214,7 @@ class TwoStageAmp(gym.Env):
         reward = 0.0
         for i,rel_spec in enumerate(rel_specs):
             if(self.specs_id[i] == 'ibias_max'):
-                rel_spec = rel_spec*-1.0/10.0
+                rel_spec = rel_spec*-1.0#/10.0
             if rel_spec < 0:
                 reward += rel_spec
                 pos_val.append(0)

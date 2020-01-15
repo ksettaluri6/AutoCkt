@@ -1,7 +1,7 @@
 import ray
 import ray.tune as tune
 from ray.rllib.agents import ppo
-from autockt.envs.spectre_vanilla_opamp import TwoStageAmp
+from autockt.envs.ngspice_vanilla_opamp import TwoStageAmp
 
 import argparse
 parser = argparse.ArgumentParser()
@@ -12,17 +12,17 @@ ray.init()
 #configures training of the agent with associated hyperparameters
 #See Ray documentation for details on each parameter
 config_train = {
-            "sample_batch_size": 60,#200,
-            "train_batch_size": 360,
-            "sgd_minibatch_size": 360,
+            "sample_batch_size": 20,
+            "train_batch_size": 120,
+            "sgd_minibatch_size": 120,
             "num_sgd_iter": 3,
             "lr":1e-3,
             "vf_loss_coeff": 0.5,
-            "horizon":  60,
+            "horizon":  20,
             "num_gpus": 0,
             "model":{"fcnet_hiddens": [64, 64]},
-            "num_workers": 8,
-            "env_config":{"generalize":True, "save_specs":True, "run_valid":False},
+            "num_workers": 6,
+            "env_config":{"generalize":True, "run_valid":False},
             }
 
 #Runs training and saves the result in ~/ray_results/train_ngspice_45nm
