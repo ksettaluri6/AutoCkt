@@ -64,4 +64,4 @@ run autockt/rollout.py /path/to/ray/checkpoint --run PPO --env opamp-v0 --num_va
 * num_val_specs: the number of untrained objectives to test on
 * traj_len: the length of each trajectory
 
-Two pickle files will be updated: opamp_obs_reached_test and opamp_obs_nreached_test. These will contain all thereached and unreached specs, respectively. 
+Two pickle files will be updated: opamp_obs_reached_test and opamp_obs_nreached_test. These will contain all the reached and unreached specs, respectively. 
