@@ -1,4 +1,4 @@
-# AutoCkt
+# AutoCkt: Deep Reinforcement Learning of Analog Circuit Designs
 Code for [Deep Reinforcement Learning of Analog Circuit Designs](https://arxiv.org/abs/2001.01808), presented at Design Automation and Test in Europe, 2020. Note that the results shown in the paper include those from NGSpice and Spectre. NGSpice is free and can be installed online (see Setup). Spectre requires a license, as well as access to the particular technology; the code for this will be open sourced at a later time.
 
 ## Setup
@@ -54,5 +54,13 @@ The training checkpoints will be saved in your home directory under ray\_results
 tensorboard --logdir path/to/checkpoint
 ```
 
+To replicate the results from the paper, num_specs 200 was used (only 50 were selected for each CPU worker). Ray parallelizes according to number of CPUs available, that affects training time. 
 ## Validating AutoCkt
+The rollout script takes the trained agent and gives it new specs that the agent has never seen before. To run this script:
 
+```
+python autockt/rollout.py /path/to/ray/checkpoint --run PPO --env opamp-v0 --num_val_specs ### --traj_len ##
+``` 
+* num_val_specs: the number of untrained objectives to test on
+* traj_len: the length of each trajectory
+ 
