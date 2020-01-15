@@ -8,6 +8,12 @@ This setup requires Anaconda. In order to obtain the required packages, run the 
 conda env create -f environment.yml
 ```
 
+To activate the environment run:
+```
+source activate autockt
+```
+Note that you might need to install some packages further using pip if necessary. To ensure the right versions, look at the environment.yml file.
+
 NGspice 2.7 needs to be installed separately, via this [installation link](https://sourceforge.net/projects/ngspice/files/ng-spice-rework/old-releases/27/). Page 607 of the pdf manual on the website has instructions on how to install. Note that you might need to remove some of the flags to get it to install correctly for your machine. 
 
 ## Code Setup
