@@ -17,7 +17,7 @@ class NgSpiceWrapper(object):
 
     BASE_TMP_DIR = os.path.abspath("/tmp/ckt_da")
 
-    def __init__(self, num_process, yaml_path, root_dir=None):
+    def __init__(self, num_process, yaml_path, path, root_dir=None):
         if root_dir == None:
             self.root_dir = NgSpiceWrapper.BASE_TMP_DIR
         else:
@@ -26,7 +26,8 @@ class NgSpiceWrapper(object):
         with open(yaml_path, 'r') as f:
             yaml_data = yaml.load(f)
         design_netlist = yaml_data['dsn_netlist']
-
+        design_netlist = path+'/'+design_netlist
+ 
         _, dsg_netlist_fname = os.path.split(design_netlist)
         self.base_design_name = os.path.splitext(dsg_netlist_fname)[0]
         self.num_process = num_process
@@ -46,7 +47,7 @@ class NgSpiceWrapper(object):
         return fname
 
     def create_design(self, state, new_fname):
-        design_folder = os.path.join(self.gen_dir, new_fname)
+        design_folder = os.path.join(self.gen_dir, new_fname)+str(random.randint(0,10000))
         os.makedirs(design_folder, exist_ok=True)
 
         fpath = os.path.join(design_folder, new_fname + '.cir')

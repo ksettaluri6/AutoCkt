@@ -3,4 +3,4 @@ Developed by Xuemei (Jane) Xi, Mohan Dunga, Prof. Ali Niknejad and Prof. Chenmin
 
 ++++++++++ BSIM4v5 PARAMETER CHECKING BELOW ++++++++++
 Warning: This model is BSIM4.5.0; you specified a wrong version number '4.0'.
-Model = nmos
+Model = pmos
