@@ -59,7 +59,7 @@ To replicate the results from the paper, num_specs 200 was used (only 50 were se
 The rollout script takes the trained agent and gives it new specs that the agent has never seen before. To run this script, open ipython:
 
 ```
-run autockt/rollout.py /path/to/ray/checkpoint --run PPO --env opamp-v0 --num_val_specs ### --traj_len ##
+run autockt/rollout.py /path/to/ray/checkpoint --run PPO --env opamp-v0 --num_val_specs ### --traj_len ## --no-render
 ``` 
 * num_val_specs: the number of untrained objectives to test on
 * traj_len: the length of each trajectory
