@@ -56,7 +56,7 @@ tensorboard --logdir path/to/checkpoint
 
 To replicate the results from the paper, num_specs 200 was used (only 50 were selected for each CPU worker). Ray parallelizes according to number of CPUs available, that affects training time. 
 ## Validating AutoCkt
-The rollout script takes the trained agent and gives it new specs that the agent has never seen before. To run this script, open ipython:
+The rollout script takes the trained agent and gives it new specs that the agent has never seen before. To generate new design specs, run the gen_specs.py file again with your desired number of specs to validate on. To run validation, open ipython:
 
 ```
 run autockt/rollout.py /path/to/ray/checkpoint --run PPO --env opamp-v0 --num_val_specs ### --traj_len ## --no-render
