@@ -45,5 +45,5 @@ else:
         "env": TwoStageAmp,
         #"restore": trials[0]._checkpoint.value},
         "restore": args.checkpoint_dir,
-        "checkpoint_freq":2},
+        "checkpoint_freq":1},
     })
