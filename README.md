@@ -69,4 +69,4 @@ Two pickle files will be updated: opamp_obs_reached_test and opamp_obs_nreached_
 ## Results
 Please note that results vary greatly based on random seed and spec generation (both for testing and validation). An example spec file is provided that was used to generate the results below. 
 
-<img src=readme_images/results.png width="500">
+<img src=readme_images/results.png width="800">
