@@ -54,7 +54,7 @@ The training checkpoints will be saved in your home directory under ray\_results
 tensorboard --logdir path/to/checkpoint
 ```
 
-To replicate the results from the paper, num_specs 200 was used (only 50 were selected for each CPU worker). Ray parallelizes according to number of CPUs available, that affects training time. 
+To replicate the results from the paper, num_specs 350 was used (only 50 were selected for each CPU worker). Ray parallelizes according to number of CPUs available, that affects training time. 
 ## Validating AutoCkt
 The rollout script takes the trained agent and gives it new specs that the agent has never seen before. To generate new design specs, run the gen_specs.py file again with your desired number of specs to validate on. To run validation, open ipython:
 
@@ -64,4 +64,9 @@ run autockt/rollout.py /path/to/ray/checkpoint --run PPO --env opamp-v0 --num_va
 * num_val_specs: the number of untrained objectives to test on
 * traj_len: the length of each trajectory
 
-Two pickle files will be updated: opamp_obs_reached_test and opamp_obs_nreached_test. These will contain all the reached and unreached specs, respectively. 
+Two pickle files will be updated: opamp_obs_reached_test and opamp_obs_nreached_test. These will contain all the reached and unreached specs, respectively.
+
+## Results
+Please note that results vary greatly based on random seed and spec generation (both for testing and validation). An example spec file is provided that was used to generate the results below. 
+
+<img src=readme_images/results.png width="500">
