@@ -82,7 +82,7 @@ class TwoStageAmp(gym.Env):
             load_specs_path = TwoStageAmp.path+"/autockt/gen_specs/ngspice_specs_gen_two_stage_opamp"
             with open(load_specs_path, 'rb') as f:
                 specs = pickle.load(f)
-
+            
         self.specs = OrderedDict(sorted(specs.items(), key=lambda k: k[0]))
         if self.specs_save:
             with open("specs_"+str(num_valid)+str(random.randint(1,100000)), 'wb') as f:
@@ -91,7 +91,6 @@ class TwoStageAmp(gym.Env):
         self.specs_ideal = []
         self.specs_id = list(self.specs.keys())
         self.fixed_goal_idx = -1 
-
         self.num_os = len(list(self.specs.values())[0])
         
         # param array
@@ -155,7 +154,7 @@ class TwoStageAmp(gym.Env):
         self.specs_ideal_norm = self.lookup(self.specs_ideal, self.global_g)
 
         #initialize current parameters
-        self.cur_params_idx = np.array([30, 30, 30, 30, 30, 30, 30])
+        self.cur_params_idx = np.array([33, 33, 33, 33, 33, 14, 20])
         self.cur_specs = self.update(self.cur_params_idx)
         cur_spec_norm = self.lookup(self.cur_specs, self.global_g)
         reward = self.reward(self.cur_specs, self.specs_ideal)
