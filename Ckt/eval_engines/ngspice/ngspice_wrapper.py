@@ -4,15 +4,12 @@ FIXME: description here!
 """
 
 # Std-Lib Imports
-import re
-import copy
-import os
-import random
+import re, os, copy, random
+from typing import Optional, Any
+from dataclasses import dataclass
 from multiprocessing.dummy import Pool as ThreadPool
 
 # PyPi Imports
-import scipy.interpolate as interp
-import scipy.optimize as sciopt
 import yaml
 
 debug = False
@@ -106,7 +103,9 @@ class NgSpiceWrapper(object):
             info = 1  # this means an error has occurred
         return info
 
-    def create_design_and_simulate(self, state, dsn_name=None, verbose=False):
+    def create_design_and_simulate(
+        self, state: Any, dsn_name: Optional[str] = None, verbose: bool = False
+    ):
         if debug:
             print("state", state)
             print("verbose", verbose)
@@ -150,3 +149,41 @@ class NgSpiceWrapper(object):
         """
         result = None
         return result
+
+
+# The single `NsSpiceWrapper` instance
+the_ngspice_wrapper = NgSpiceWrapper(
+    num_process=1,
+    yaml_path="path",  # FIXME! what's this need to be?
+    path="path",  # FIXME! what's this need to be?
+    root_dir=None,
+)
+
+
+@dataclass
+class Args:
+    """# Server Call Arguments"""
+
+    state: Any  # FIXME: the real trick: what goes in this `state`?
+
+
+@dataclass
+class Return:
+    """# Server Return Values"""
+
+    # FIXME: the real trick: what actually goes into all this?
+    state: Any
+    specs: Any
+    info: Any
+
+
+def the_thing_the_client_calls(args: Args) -> Return:
+    """# The Thing The Client Calls
+    The primary entrypoint for server-side logic.
+    FIXME: describe and re-name me plz!"""
+
+    state, specs, info = the_ngspice_wrapper.create_design_and_simulate(
+        state=args.state, dsn_name=None, verbose=True
+    )
+
+    return Return(state=state, specs=specs, info=info)

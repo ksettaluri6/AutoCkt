@@ -257,6 +257,9 @@ class TwoStageAmp(gym.Env):
         :param action: an int between 0 ... n-1
         :return:
         """
+
+        ## FIXME: Very important to understand this params stuff! 
+
         # impose constraint tail1 = in
         # params_idx[0] = params_idx[3]
         params = [self.params[i][params_idx[i]] for i in range(len(self.params_id))]
@@ -265,6 +268,9 @@ class TwoStageAmp(gym.Env):
         # run param vals and simulate
         cur_specs = OrderedDict(
             sorted(
+                # 
+                # FIXME: this call here gotta get replaced!
+                # 
                 self.sim_env.create_design_and_simulate(param_val[0])[1].items(),
                 key=lambda k: k[0],
             )
