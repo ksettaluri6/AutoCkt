@@ -6,7 +6,7 @@ FIXME: description here!
 # Std-Lib Imports
 import re, os, copy, random
 from typing import Optional, Any
-from dataclasses import dataclass
+# from dataclasses import dataclass ## FIXME! get this ancient Python version upgraded already
 from multiprocessing.dummy import Pool as ThreadPool
 
 # PyPi Imports
@@ -160,14 +160,14 @@ the_ngspice_wrapper = NgSpiceWrapper(
 )
 
 
-@dataclass
+# @dataclass ## FIXME!
 class Args:
     """# Server Call Arguments"""
 
     state: Any  # FIXME: the real trick: what goes in this `state`?
 
 
-@dataclass
+# @dataclass ## FIXME!
 class Return:
     """# Server Return Values"""
 
