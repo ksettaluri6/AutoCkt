@@ -16,9 +16,9 @@ long_description = "" if not readme.exists() else readme.read_text(encoding="utf
 
 
 setup(
-    name="autockt_shared",
+    name="eval_engines",
     version="0.0.1",
-    description="BWRC AMS ML Discovery AutoCkt - Shared",
+    description="BWRC AMS ML Discovery AutoCkt - Circuits",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="FIXME",
@@ -27,7 +27,11 @@ setup(
     packages=find_packages(),
     python_requires=">=3.7, <4",
     install_requires=[  ##
-        "numpy",  ## FIXME: do we need this specific version ==1.16.4",
+        ## FIXME: can we ease up on the version requirements?
+        "numpy==1.16.4",
+        "scipy==1.1.0",
+        "pyyaml==5.1.2,",
+        "autockt_shared",  # Local "workspace" dependency
     ],
     extras_require={
         "dev": [
