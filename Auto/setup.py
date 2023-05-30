@@ -16,9 +16,9 @@ long_description = "" if not readme.exists() else readme.read_text(encoding="utf
 
 
 setup(
-    name="autockt_shared",
+    name="autockt",
     version="0.0.1",
-    description="BWRC AMS ML Discovery AutoCkt - Shared",
+    description="BWRC AMS ML Discovery AutoCkt - ML",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="FIXME",
@@ -30,6 +30,12 @@ setup(
         ## FIXME: can we ease up on the version requirements?
         ## Maybe, but it's nice for intra-workspace consistency. 
         "numpy==1.16.4",
+        "scipy==1.1.0",
+        "gym==0.10.5", # Core ML dependency: OpenAI Gym
+        "ray==0.6.3", # Ray for RL, parallelization, training
+        "ipython=6.5.0", # FIXME: probably dev only? 
+        "pyyaml==5.1.2,",
+        "autockt_shared",  # Local "workspace" dependency
     ],
     extras_require={
         "dev": [
