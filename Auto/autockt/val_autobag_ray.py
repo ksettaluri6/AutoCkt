@@ -27,7 +27,7 @@ config_train = {
             "horizon":  30,
             "num_gpus": 0,
             "model":{"fcnet_hiddens": [64, 64]},
-            "num_workers": 6,
+            "num_workers": 1,
             "env_config":{"generalize":True, "run_valid":False},
             }
 
