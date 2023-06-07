@@ -6,6 +6,7 @@ FIXME: description here!
 # Std-Lib Imports
 import re, os, copy, random
 from typing import Optional, Any
+
 # from dataclasses import dataclass ## FIXME! get this ancient Python version upgraded already
 from multiprocessing.dummy import Pool as ThreadPool
 
@@ -16,6 +17,7 @@ debug = False
 
 
 class NgSpiceWrapper(object):
+    # FIXME here why we abs path to tmp?
     BASE_TMP_DIR = os.path.abspath("/tmp/ckt_da")
 
     def __init__(self, num_process, yaml_path, path, root_dir=None):
@@ -151,39 +153,37 @@ class NgSpiceWrapper(object):
         return result
 
 
-# The single `NsSpiceWrapper` instance
-the_ngspice_wrapper = NgSpiceWrapper(
-    num_process=1,
-    yaml_path="path",  # FIXME! what's this need to be?
-    path="path",  # FIXME! what's this need to be?
-    root_dir=None,
-)
-
-
-# @dataclass ## FIXME!
-class Args:
-    """# Server Call Arguments"""
-
-    state: Any  # FIXME: the real trick: what goes in this `state`?
-
-
-# @dataclass ## FIXME!
-class Return:
-    """# Server Return Values"""
-
-    # FIXME: the real trick: what actually goes into all this?
-    state: Any
-    specs: Any
-    info: Any
-
-
-def the_thing_the_client_calls(args: Args) -> Return:
-    """# The Thing The Client Calls
-    The primary entrypoint for server-side logic.
-    FIXME: describe and re-name me plz!"""
-
-    state, specs, info = the_ngspice_wrapper.create_design_and_simulate(
-        state=args.state, dsn_name=None, verbose=True
+if False:
+    # The single `NsSpiceWrapper` instance
+    the_ngspice_wrapper = NgSpiceWrapper(
+        num_process=1,
+        yaml_path="path",  # FIXME! what's this need to be?
+        path="path",  # FIXME! what's this need to be?
+        root_dir=None,
     )
 
-    return Return(state=state, specs=specs, info=info)
+    # @dataclass ## FIXME!
+    class Args:
+        """# Server Call Arguments"""
+
+        state: Any  # FIXME: the real trick: what goes in this `state`?
+
+    # @dataclass ## FIXME!
+    class Return:
+        """# Server Return Values"""
+
+        # FIXME: the real trick: what actually goes into all this?
+        state: Any
+        specs: Any
+        info: Any
+
+    def the_thing_the_client_calls(args: Args) -> Return:
+        """# The Thing The Client Calls
+        The primary entrypoint for server-side logic.
+        FIXME: describe and re-name me plz!"""
+
+        state, specs, info = the_ngspice_wrapper.create_design_and_simulate(
+            state=args.state, dsn_name=None, verbose=True
+        )
+
+        return Return(state=state, specs=specs, info=info)

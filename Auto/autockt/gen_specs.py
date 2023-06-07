@@ -66,7 +66,7 @@ def gen_data(CIR_YAML, env, num_specs):
     for key, value in specs_range.items():
         specs_range[key] = specs_valid[i]
         i += 1
-    with open("autockt/gen_specs/ngspice_specs_gen_" + env, "wb") as f:
+    with open("Auto/autockt/gen_specs/ngspice_specs_gen_" + env, "wb") as f:
         pickle.dump(specs_range, f)
 
 
@@ -74,7 +74,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--num_specs", type=str)
     args = parser.parse_args()
-    CIR_YAML = "eval_engines/ngspice/ngspice_inputs/yaml_files/two_stage_opamp.yaml"
+    CIR_YAML = "Ckt/eval_engines/ngspice/ngspice_inputs/yaml_files/two_stage_opamp.yaml"
 
     gen_data(CIR_YAML, "two_stage_opamp", int(args.num_specs))
 
