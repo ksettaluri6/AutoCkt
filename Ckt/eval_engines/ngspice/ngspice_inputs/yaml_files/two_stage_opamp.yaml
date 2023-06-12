@@ -1,5 +1,5 @@
 database_dir: "Autockt/checkpoint/db/two_stage_opamp_ngspice"
-dsn_netlist: "eval_engines/ngspice/ngspice_inputs/netlist/two_stage_opamp.cir"
+dsn_netlist: "Ckt/eval_engines/ngspice/ngspice_inputs/netlist/two_stage_opamp.cir"
 num_process: 1
 
 params:

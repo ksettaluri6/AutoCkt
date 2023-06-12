@@ -14,7 +14,7 @@ import yaml
 import yaml.constructor
 
 # Workspace Imports
-from eval_engines.util.core import *
+# from eval_engines.util.core import *
 from eval_engines.ngspice.TwoStageClass import *
 
 
@@ -64,7 +64,8 @@ class TwoStageAmp(gym.Env):
     # obtains yaml file
     path = os.getcwd()
     CIR_YAML = (
-        path + "/eval_engines/ngspice/ngspice_inputs/yaml_files/two_stage_opamp.yaml"
+        path
+        + "/Ckt/eval_engines/ngspice/ngspice_inputs/yaml_files/two_stage_opamp.yaml"
     )
 
     def __init__(self, env_config):
@@ -84,7 +85,7 @@ class TwoStageAmp(gym.Env):
         else:
             load_specs_path = (
                 TwoStageAmp.path
-                + "/autockt/gen_specs/ngspice_specs_gen_two_stage_opamp"
+                + "/Auto/autockt/gen_specs/ngspice_specs_gen_two_stage_opamp"
             )
             with open(load_specs_path, "rb") as f:
                 specs = pickle.load(f)
@@ -258,7 +259,7 @@ class TwoStageAmp(gym.Env):
         :return:
         """
 
-        ## FIXME: Very important to understand this params stuff! 
+        ## FIXME: Very important to understand this params stuff!
 
         # impose constraint tail1 = in
         # params_idx[0] = params_idx[3]
@@ -268,9 +269,9 @@ class TwoStageAmp(gym.Env):
         # run param vals and simulate
         cur_specs = OrderedDict(
             sorted(
-                # 
+                #
                 # FIXME: this call here gotta get replaced!
-                # 
+                #
                 self.sim_env.create_design_and_simulate(param_val[0])[1].items(),
                 key=lambda k: k[0],
             )

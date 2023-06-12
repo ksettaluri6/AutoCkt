@@ -25,15 +25,18 @@ setup(
     author="The Regents of the University of California",
     author_email="FIXME",
     packages=find_packages(),
-    python_requires=">=3.5, <3.6", ## FIXME: require 3.7, maybe more, after dependencies upgrades
+    python_requires=">=3.7, <3.8",  ## FIXME: require 3.7, maybe more, after dependencies upgrades
     install_requires=[  ##
         ## FIXME: can we ease up on the version requirements?
-        ## Maybe, but it's nice for intra-workspace consistency. 
+        ## Maybe, but it's nice for intra-workspace consistency.
         "numpy==1.16.4",
         "scipy==1.1.0",
-        "gym==0.10.5", # Core ML dependency: OpenAI Gym
-        "ray==0.6.3", # Ray for RL, parallelization, training
-        "ipython==6.5.0", # FIXME: probably dev only? 
+        "gym==0.10.5",  # Core ML dependency: OpenAI Gym
+        "ray==0.6.3",  # Ray for RL, parallelization, training
+        "tensorflow==1.13.1",  # "ray" needs these
+        "protobuf==3.20.0",  # "ray" needs these
+        "opencv-python==4.6.0.66",  # "ray" needs these
+        "ipython==6.5.0",  # FIXME: probably dev only?
         "pyyaml==5.1.2",
         "autockt_shared",  # Local "workspace" dependency
     ],
